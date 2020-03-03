@@ -30,7 +30,6 @@ const UserType = new GraphQLObjectType({
     tension: {
       type: UserTensionType,
       resolve: async parent => {
-        console.log(parent);
         return await Store.getUserTensionByID(parent.id);
       },
     },
@@ -89,7 +88,7 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     users: {
       type: new GraphQLList(UserType),
-      resolve: async (parent, args) => {
+      resolve: async () => {
         return await Store.getUsers();
       },
     },
@@ -103,4 +102,71 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
-module.exports = new GraphQLSchema({ query: RootQuery });
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    updateWeight: {
+      type: UserWeightType,
+      args: {
+        userID: { type: GraphQLID },
+        weight: { type: GraphQLInt },
+        date: { type: GraphQLString },
+      },
+      resolve: async (parent, { userID, weight, date }) => {
+        console.log('weight', userID);
+        return await Store.updateUserWeight(userID, weight, date);
+      },
+    },
+    updateTension: {
+      type: UserTensionType,
+      args: {
+        userID: { type: GraphQLID },
+        tension: { type: GraphQLInt },
+        date: { type: GraphQLString },
+      },
+      resolve: async (parent, { userID, tension, date }) => {
+        console.log('tension', userID);
+        return await Store.updateUserTension(userID, tension, date);
+      },
+    },
+    updateDrinkConsumption: {
+      type: UserWaterConsumptionType,
+      args: {
+        userID: { type: GraphQLID },
+        glassofwaterdrunk: { type: GraphQLInt },
+        date: { type: GraphQLString },
+      },
+      resolve: async (parent, { userID, glassofwaterdrunk, date }) => {
+        console.log('water', userID);
+        return await Store.updateUserDrinkConsumption(
+          userID,
+          glassofwaterdrunk,
+          date
+        );
+      },
+    },
+    updateExercices: {
+      type: UserExercicesType,
+      args: {
+        userID: { type: GraphQLID },
+        exercicetype: { type: GraphQLString },
+        exerciceduration: { type: GraphQLInt },
+        date: { type: GraphQLString },
+      },
+      resolve: async (
+        parent,
+        { userID, exercicetype, exerciceduration, date }
+      ) => {
+        console.log('ex', userID);
+        return await Store.updateUserExercices(
+          userID,
+          exercicetype,
+          exerciceduration,
+          date
+        );
+      },
+    },
+  },
+});
+
+module.exports = new GraphQLSchema({ query: RootQuery, mutation: Mutation });

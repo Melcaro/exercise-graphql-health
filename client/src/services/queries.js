@@ -11,8 +11,8 @@ export const allUsersQuery = gql`
 `;
 
 export const UserQuery = gql`
-  {
-    user {
+  query($id: ID) {
+    user(id: $id) {
       id
       name
       age
@@ -33,6 +33,49 @@ export const UserQuery = gql`
         exerciceduration
         date
       }
+    }
+  }
+`;
+
+export const updateQuery = gql`
+  mutation(
+    $userID: ID
+    $weight: Int
+    $tension: Int
+    $glassofwaterdrunk: Int
+    $exercicetype: String
+    $exerciceduration: Int
+    $date: String
+  ) {
+    updateWeight(userID: $userID, weight: $weight, date: $date) {
+      user_id
+      weight
+      date
+    }
+    updateTension(userID: $userID, tension: $tension, date: $date) {
+      user_id
+      tension
+      date
+    }
+    updateDrinkConsumption(
+      userID: $userID
+      glassofwaterdrunk: $glassofwaterdrunk
+      date: $date
+    ) {
+      user_id
+      glassofwaterdrunk
+      date
+    }
+    updateExercices(
+      userID: $userID
+      exercicetype: $exercicetype
+      exerciceduration: $exerciceduration
+      date: $date
+    ) {
+      user_id
+      exercicetype
+      exerciceduration
+      date
     }
   }
 `;

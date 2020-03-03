@@ -29,7 +29,7 @@ async function getUsers() {
 async function getUserByID(userID) {
   try {
     const { rows } = await client.query(
-      `SELECT name,age, id FROM users WHERE id=${userID}`
+      `SELECT * FROM users WHERE id=${userID}`
     );
     return rows[0];
   } catch (e) {
@@ -61,7 +61,6 @@ async function getUserWaterConsumptionByID(userID) {
 
 async function getUserTensionByID(userID) {
   try {
-    console.log(userID);
     const { rows } = await client.query(
       `SELECT * FROM userstension WHERE user_id=${userID}`
     );
@@ -82,6 +81,70 @@ async function getUserExercicesByID(userID) {
   }
 }
 
+async function updateUserWeight(userID, weight, date) {
+  try {
+    console.log(
+      `INSERT INTO usersweight (user_id,weight,date) VALUES(${userID},${weight},'${date}') RETURNING *`
+    );
+    const { rows } =
+      weight !== 0
+        ? await client.query(
+            `INSERT INTO usersweight (user_id,weight,date) VALUES(${userID},${weight},'${date}') RETURNING *`
+          )
+        : {};
+    return rows[0];
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function updateUserTension(userID, tension, date) {
+  try {
+    const { rows } =
+      tension !== 0
+        ? await client.query(
+            `INSERT INTO userstension(user_id,tension,date) VALUES(${userID},${tension},'${date}')`
+          )
+        : {};
+    return rows[0];
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function updateUserDrinkConsumption(userID, waterDrunk, date) {
+  try {
+    const { rows } =
+      waterDrunk !== 0
+        ? await client.query(
+            `INSERT INTO userswaterconsumption (user_id,glassofwaterdrunk,date) VALUES(${userID},${waterDrunk},'${date}') `
+          )
+        : {};
+    return rows[0];
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function updateUserExercices(
+  userID,
+  exerciceType,
+  exerciceDuration,
+  date
+) {
+  try {
+    const { rows } =
+      exerciceDuration !== 0 && exerciceType !== ''
+        ? client.query(
+            `INSERT INTO usersecercices (user_id,exerciceduration,exercicetype,date) VALUES(${userID},${exerciceDuration},'${exerciceType}','${date}')`
+          )
+        : {};
+    return rows[0];
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 createDB();
 module.exports = {
   createDB,
@@ -91,4 +154,8 @@ module.exports = {
   getUserWaterConsumptionByID,
   getUserTensionByID,
   getUserExercicesByID,
+  updateUserWeight,
+  updateUserTension,
+  updateUserDrinkConsumption,
+  updateUserExercices,
 };

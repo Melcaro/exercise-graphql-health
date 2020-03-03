@@ -1,96 +1,101 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
+import { Link } from 'react-router-dom';
+
 import { UserQuery } from '../services/queries';
 
-// id,
-//   name,
-//   age,
-//   weight,
-//   tension,
-//   waterConsumption,
-//   exercices,
+const User = props => {
+  const { loading, user = {} } = props.UserQuery;
 
-export const User = props => {
-  console.log(props);
   return (
-    <div>USER PAGE</div>
-    /* <div>
-      <div key={id}>
-        <h3>{name}</h3>
-        <div>Age: {age} yo</div>
+    !loading && (
+      <div>
+        <div>USER PAGE</div>
+        <div key={user.id}>
+          <h3>{user.name}</h3>
+          <div>Age: {user.age} yo</div>
 
-        <h4>WEIGHT</h4>
+          <h4>WEIGHT</h4>
 
-        <table>
-          <thead>
-            <tr>
-              <th>DATE</th>
-              <th>WEIGHT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{weight.date}</td>
-              <td>{weight.weight}</td>
-            </tr>
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <tr>
+                <th>DATE</th>
+                <th>WEIGHT</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{user.weight.date}</td>
+                <td>{user.weight.weight}</td>
+              </tr>
+            </tbody>
+          </table>
 
-        <h4>TENSION</h4>
+          <h4>TENSION</h4>
 
-        <table>
-          <thead>
-            <tr>
-              <th>DATE</th>
-              <th>TENSION</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{tension.date}</td>
-              <td>{tension.tension}</td>
-            </tr>
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <tr>
+                <th>DATE</th>
+                <th>TENSION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{user.tension.date}</td>
+                <td>{user.tension.tension}</td>
+              </tr>
+            </tbody>
+          </table>
 
-        <h4>WATER CONSUMPTION</h4>
+          <h4>WATER CONSUMPTION</h4>
 
-        <table>
-          <thead>
-            <tr>
-              <th>DATE</th>
-              <th>GLASSES OF WATERS DRANK TODAY</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{waterConsumption.date}</td>
-              <td>{waterConsumption.glassofwaterdrunk}</td>
-            </tr>
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <tr>
+                <th>DATE</th>
+                <th>GLASSES OF WATERS DRANK TODAY</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{user.waterConsumption.date}</td>
+                <td>{user.waterConsumption.glassofwaterdrunk}</td>
+              </tr>
+            </tbody>
+          </table>
 
-        <h4>EXERCICES</h4>
+          <h4>EXERCICES</h4>
 
-        <table>
-          <thead>
-            <tr>
-              <th>DATE</th>
-              <th>EXERCISE TYPE </th>
-              <th>EXERCISE DURATION </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{exercices.date}</td>
-              <td>{exercices.exercicetype}</td>
-              <td>{exercices.exerciceduration}</td>
-            </tr>
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <tr>
+                <th>DATE</th>
+                <th>EXERCISE TYPE </th>
+                <th>EXERCISE DURATION </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{user.exercices.date}</td>
+                <td>{user.exercices.exercicetype}</td>
+                <td>{user.exercices.exerciceduration}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <Link to={`/${user.id}/updateProfile`}>
+          <div>Update Your Profile</div>
+        </Link>
       </div>
-    </div> */
+    )
   );
 };
 
-export default graphql(UserQuery)(User);
+export default graphql(UserQuery, {
+  name: 'UserQuery',
+  options: props => ({
+    variables: { id: props.match.params.userID },
+  }),
+})(User);
