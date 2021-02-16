@@ -15,4 +15,10 @@ const usersExercices = [
   { user_id: '', exerciceDuration: '', exerciceType: '', date: '' },
 ];
 
-module.exports = { users };
+module.exports = {
+  users,
+  usersWeight,
+  usersTension,
+  usersWaterConsumption,
+  usersExercices,
+};

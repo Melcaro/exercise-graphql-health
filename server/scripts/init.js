@@ -2,12 +2,49 @@ const Store = require('../store/store');
 const Data = require('../data/data');
 
 async function initializeDB() {
-  const client = await Store.createDB();
-  //addUsers(Data.users, client);
-  //addUsersWeights(client);
-  addUsersTension(client);
-  addUsersWaterConsumption(client);
-  addUsersExercices(client);
+  try {
+    const client = await Store.createDB();
+    deleteTables(client);
+    await createTables(client);
+    addUsers(Data.users, client);
+    addUsersWeights(client);
+    addUsersTension(client);
+    addUsersWaterConsumption(client);
+    addUsersExercices(client);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function createTables(client) {
+  try {
+    await client.query(
+      `CREATE TABLE users  (id SERIAL PRIMARY KEY, name TEXT, age INT)`
+    );
+    await client.query(
+      `CREATE TABLE usersweight (user_id INT PRIMARY KEY, weight INT, date DATE)`
+    );
+    await client.query(
+      `CREATE TABLE userstension (user_id INT PRIMARY KEY, tension INT, date TEXT)`
+    );
+    await client.query(
+      `CREATE TABLE userswaterconsumption (user_id INT PRIMARY KEY, glassofwaterdrunk INT, date TEXT)`
+    );
+    await client.query(
+      `CREATE TABLE usersecercices (user_id INT PRIMARY KEY, exerciceduration INT, exercicetype TEXT, date TEXT)`
+    );
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function deleteTables(client) {
+  try {
+    return await client.query(`TRUNCATE TABLE users`);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 function addUsers(usersList = [], client) {
@@ -83,4 +120,8 @@ async function addUsersExercices(client) {
   }
 }
 
-//initializeDB();
+try {
+  initializeDB();
+} catch (e) {
+  console.log(e);
+}

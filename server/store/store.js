@@ -2,19 +2,22 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   user: 'postgres',
-  host: '192.168.99.100',
+  host: 'localhost',
   database: 'healthapp',
-  password: '',
+  password: 'secret',
   port: 5002,
 });
 
 let client = null;
 
 async function createDB() {
-  client = await pool.connect();
-  const res = await client.query('SELECT NOW()');
-  console.log(res.rows[0]);
-  return client;
+  try {
+    client = await pool.connect();
+    //const res = await client.query('SELECT NOW()');
+    return client;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 async function getUsers() {
@@ -145,7 +148,11 @@ async function updateUserExercices(
   }
 }
 
-createDB();
+try {
+  createDB();
+} catch (e) {
+  console.log(e);
+}
 module.exports = {
   createDB,
   getUsers,

@@ -8,6 +8,7 @@
     "random-date-generator": "^1.0.2"
   },
   "scripts": {
+    "startPG": "docker run -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=healthapp -p 5002:5432 -d postgres",
     "start:dev": "nodemon index.js",
     "initDB": "node ./scripts/init.js"
   }
