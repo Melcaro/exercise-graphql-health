@@ -30,7 +30,7 @@ async function createTables(client) {
       `CREATE TABLE userswaterconsumption (id SERIAL, user_id INT PRIMARY KEY, glassofwaterdrunk INT, date TEXT)`
     );
     await client.query(
-      `CREATE TABLE usersecercices (id SERIAL, user_id INT PRIMARY KEY, exerciceduration INT, exercicetype TEXT, date TEXT)`
+      `CREATE TABLE usersexercices (id SERIAL, user_id INT PRIMARY KEY, exerciceduration INT, exercicetype TEXT, date TEXT)`
     );
     return true;
   } catch (e) {
@@ -62,11 +62,11 @@ async function addUsersWeights(client) {
   try {
     const { rows: users } = await client.query('SELECT * FROM users');
 
-    users.forEach(async ({ id: userID }) => {
+    users.forEach(async ({ id: userID, name: userName }) => {
       const weight = Math.floor(Math.random() * 100);
       const date = '02/02/2020 12:40';
       await client.query(
-        `INSERT INTO usersweight (user_id, weight, date) VALUES(${userID}, ${weight},'${date}') RETURNING *`
+        `INSERT INTO usersweight (user_id, user_name,weight, date) VALUES(${userID},${userName}, ${weight},'${date}') RETURNING *`
       );
     });
   } catch (e) {
@@ -78,12 +78,12 @@ async function addUsersTension(client) {
   try {
     const { rows: users } = await client.query('SELECT * FROM users');
 
-    users.forEach(async ({ id: userID }) => {
+    users.forEach(async ({ id: userID, name: userName }) => {
       console.log('userID', userID, typeof userID);
       const tension = Math.floor(Math.random() * 100);
       const date = '02/02/2020 13:00';
       await client.query(
-        `INSERT INTO userstension (user_id,tension,date) VALUES(${userID},${tension},'${date}') RETURNING *`
+        `INSERT INTO userstension (user_id,user_name,tension,date) VALUES(${userID},${userName},${tension},'${date}') RETURNING *`
       );
     });
   } catch (e) {
@@ -94,11 +94,11 @@ async function addUsersTension(client) {
 async function addUsersWaterConsumption(client) {
   try {
     const { rows: users } = await client.query('SELECT * FROM users');
-    users.forEach(async ({ id: userID }) => {
+    users.forEach(async ({ id: userID, name: userName }) => {
       const glassOfWaterDrunk = Math.floor(Math.random() * 10);
       const date = '02/02/2020 13:15';
       await client.query(
-        `INSERT INTO userswaterconsumption (user_id,glassofwaterdrunk,date) VALUES(${userID},${glassOfWaterDrunk},'${date}') RETURNING *`
+        `INSERT INTO userswaterconsumption (user_id,user_name,glassofwaterdrunk,date) VALUES(${userID},${userName},${glassOfWaterDrunk},'${date}') RETURNING *`
       );
     });
   } catch (e) {
@@ -109,11 +109,11 @@ async function addUsersWaterConsumption(client) {
 async function addUsersExercices(client) {
   try {
     const { rows: users } = await client.query('SELECT * FROM users');
-    users.forEach(async ({ id: userID }) => {
+    users.forEach(async ({ id: userID, name: userName }) => {
       const exerciceTime = Math.floor(Math.random() * 100);
       const date = '02/02/2020 13:10';
       await client.query(
-        `INSERT INTO usersecercices (user_id,exerciceduration,exercicetype,date) VALUES(${userID},${exerciceTime},'velo','${date}') RETURNING *`
+        `INSERT INTO usersexercices (user_id,user_name, exerciceduration,exercicetype,date) VALUES(${userID},${userName},${exerciceTime},'velo','${date}') RETURNING *`
       );
     });
   } catch (e) {

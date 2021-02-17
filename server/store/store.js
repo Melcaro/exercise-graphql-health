@@ -13,7 +13,6 @@ let client = null;
 async function createDB() {
   try {
     client = await pool.connect();
-    //const res = await client.query('SELECT NOW()');
     return client;
   } catch (e) {
     console.log(e);
@@ -40,12 +39,30 @@ async function getUserByID(userID) {
   }
 }
 
+async function getAllUsersWeights() {
+  try {
+    const { rows } = await client.query(`SELECT * FROM usersweight`);
+    return rows;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 async function getUserWeightByID(userID) {
   try {
     const { rows } = await client.query(
       `SELECT * FROM usersweight WHERE user_id=${userID}`
     );
     return rows[0];
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getAllUsersWaterConsumptions() {
+  try {
+    const { rows } = await client.query(`SELECT * FROM userswaterconsumption`);
+    return rows;
   } catch (e) {
     console.log(e);
   }
@@ -62,12 +79,30 @@ async function getUserWaterConsumptionByID(userID) {
   }
 }
 
+async function getAllUsersTensions() {
+  try {
+    const { rows } = await client.query(`SELECT * FROM userstension`);
+    return rows;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 async function getUserTensionByID(userID) {
   try {
     const { rows } = await client.query(
       `SELECT * FROM userstension WHERE user_id=${userID}`
     );
     return rows[0];
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getAllUsersExercices() {
+  try {
+    const { rows } = await client.query(`SELECT * FROM usersexercices`);
+    return rows;
   } catch (e) {
     console.log(e);
   }
@@ -86,15 +121,13 @@ async function getUserExercicesByID(userID) {
 
 async function updateUserWeight(userID, weight, date) {
   try {
-    console.log(
-      `INSERT INTO usersweight (user_id,weight,date) VALUES(${userID},${weight},'${date}') RETURNING *`
-    );
     const { rows } =
       weight !== 0
         ? await client.query(
             `INSERT INTO usersweight (user_id,weight,date) VALUES(${userID},${weight},'${date}') RETURNING *`
           )
         : {};
+    console.log('user weight updated', rows[0]);
     return rows[0];
   } catch (e) {
     console.log(e);
@@ -153,13 +186,18 @@ try {
 } catch (e) {
   console.log(e);
 }
+
 module.exports = {
   createDB,
   getUsers,
   getUserByID,
   getUserWeightByID,
+  getAllUsersWeights,
+  getAllUsersWaterConsumptions,
   getUserWaterConsumptionByID,
+  getAllUsersTensions,
   getUserTensionByID,
+  getAllUsersExercices,
   getUserExercicesByID,
   updateUserWeight,
   updateUserTension,

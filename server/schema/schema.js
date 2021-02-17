@@ -17,25 +17,25 @@ const UserType = new GraphQLObjectType({
     age: { type: GraphQLInt },
     weight: {
       type: UserWeightType,
-      resolve: async parent => {
+      resolve: async (parent) => {
         return await Store.getUserWeightByID(parent.id);
       },
     },
     waterConsumption: {
       type: UserWaterConsumptionType,
-      resolve: async parent => {
+      resolve: async (parent) => {
         return await Store.getUserWaterConsumptionByID(parent.id);
       },
     },
     tension: {
       type: UserTensionType,
-      resolve: async parent => {
+      resolve: async (parent) => {
         return await Store.getUserTensionByID(parent.id);
       },
     },
     exercices: {
       type: UserExercicesType,
-      resolve: async parent => {
+      resolve: async (parent) => {
         return await Store.getUserExercicesByID(parent.id);
       },
     },
@@ -45,8 +45,8 @@ const UserType = new GraphQLObjectType({
 const UserWeightType = new GraphQLObjectType({
   name: 'UserWeight',
   fields: () => ({
-    id: { type: GraphQLID },
     user_id: { type: GraphQLInt },
+    user_name: { type: GraphQLString },
     weight: { type: GraphQLInt },
     date: { type: GraphQLString },
   }),
@@ -55,8 +55,8 @@ const UserWeightType = new GraphQLObjectType({
 const UserWaterConsumptionType = new GraphQLObjectType({
   name: 'UserWaterConsumption',
   fields: () => ({
-    id: { type: GraphQLID },
     user_id: { type: GraphQLInt },
+    user_name: { type: GraphQLString },
     glassofwaterdrunk: { type: GraphQLInt },
     date: { type: GraphQLString },
   }),
@@ -65,8 +65,8 @@ const UserWaterConsumptionType = new GraphQLObjectType({
 const UserTensionType = new GraphQLObjectType({
   name: 'UserTension',
   fields: () => ({
-    id: { type: GraphQLID },
     user_id: { type: GraphQLInt },
+    user_name: { type: GraphQLString },
     tension: { type: GraphQLInt },
     date: { type: GraphQLString },
   }),
@@ -75,8 +75,8 @@ const UserTensionType = new GraphQLObjectType({
 const UserExercicesType = new GraphQLObjectType({
   name: 'UserExercice',
   fields: () => ({
-    id: { type: GraphQLID },
     user_id: { type: GraphQLInt },
+    user_name: { type: GraphQLString },
     exerciceduration: { type: GraphQLInt },
     exercicetype: { type: GraphQLString },
     date: { type: GraphQLString },
@@ -97,6 +97,30 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve: async (parent, { id }) => {
         return await Store.getUserByID(id);
+      },
+    },
+    weights: {
+      type: new GraphQLList(UserWeightType),
+      resolve: async () => {
+        return await Store.getAllUsersWeights();
+      },
+    },
+    tensions: {
+      type: new GraphQLList(UserTensionType),
+      resolve: async () => {
+        return await Store.getAllUsersTensions();
+      },
+    },
+    exercices: {
+      type: new GraphQLList(UserExercicesType),
+      resolve: async () => {
+        return await Store.getAllUsersExercices();
+      },
+    },
+    waterConsumptions: {
+      type: new GraphQLList(UserWaterConsumptionType),
+      resolve: async () => {
+        return await Store.getAllUsersWaterConsumptions();
       },
     },
   },
