@@ -4,13 +4,12 @@ const Data = require('../data/data');
 async function initializeDB() {
   try {
     const client = await Store.createDB();
-    deleteTables(client);
-    await createTables(client);
-    addUsers(Data.users, client);
-    addUsersWeights(client);
-    addUsersTension(client);
-    addUsersWaterConsumption(client);
-    addUsersExercices(client);
+    const tablesAreCreated = await createTables(client);
+    tablesAreCreated && addUsers(Data.users, client);
+    tablesAreCreated && addUsersWeights(client);
+    tablesAreCreated && addUsersTension(client);
+    tablesAreCreated && addUsersWaterConsumption(client);
+    tablesAreCreated && addUsersExercices(client);
   } catch (e) {
     console.log(e);
   }
@@ -19,19 +18,19 @@ async function initializeDB() {
 async function createTables(client) {
   try {
     await client.query(
-      `CREATE TABLE users  (id SERIAL PRIMARY KEY, name TEXT, age INT)`
+      `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT, age INT)`
     );
     await client.query(
-      `CREATE TABLE usersweight (user_id INT PRIMARY KEY, weight INT, date DATE)`
+      `CREATE TABLE usersweight (id SERIAL, user_id INT PRIMARY KEY, weight INT, date TEXT)`
     );
     await client.query(
-      `CREATE TABLE userstension (user_id INT PRIMARY KEY, tension INT, date TEXT)`
+      `CREATE TABLE userstension (id SERIAL, user_id INT PRIMARY KEY, tension INT, date TEXT)`
     );
     await client.query(
-      `CREATE TABLE userswaterconsumption (user_id INT PRIMARY KEY, glassofwaterdrunk INT, date TEXT)`
+      `CREATE TABLE userswaterconsumption (id SERIAL, user_id INT PRIMARY KEY, glassofwaterdrunk INT, date TEXT)`
     );
     await client.query(
-      `CREATE TABLE usersecercices (user_id INT PRIMARY KEY, exerciceduration INT, exercicetype TEXT, date TEXT)`
+      `CREATE TABLE usersecercices (id SERIAL, user_id INT PRIMARY KEY, exerciceduration INT, exercicetype TEXT, date TEXT)`
     );
     return true;
   } catch (e) {
@@ -67,7 +66,7 @@ async function addUsersWeights(client) {
       const weight = Math.floor(Math.random() * 100);
       const date = '02/02/2020 12:40';
       await client.query(
-        `INSERT INTO usersweight (user_id, weight, date) VALUES(${userID}, ${weight},'${date}' ) RETURNING *`
+        `INSERT INTO usersweight (user_id, weight, date) VALUES(${userID}, ${weight},'${date}') RETURNING *`
       );
     });
   } catch (e) {
@@ -80,6 +79,7 @@ async function addUsersTension(client) {
     const { rows: users } = await client.query('SELECT * FROM users');
 
     users.forEach(async ({ id: userID }) => {
+      console.log('userID', userID, typeof userID);
       const tension = Math.floor(Math.random() * 100);
       const date = '02/02/2020 13:00';
       await client.query(
@@ -95,9 +95,10 @@ async function addUsersWaterConsumption(client) {
   try {
     const { rows: users } = await client.query('SELECT * FROM users');
     users.forEach(async ({ id: userID }) => {
+      const glassOfWaterDrunk = Math.floor(Math.random() * 10);
       const date = '02/02/2020 13:15';
       await client.query(
-        `INSERT INTO userswaterconsumption (user_id,glassofwaterdrunk,date) VALUES(${userID},0,'${date}') RETURNING *`
+        `INSERT INTO userswaterconsumption (user_id,glassofwaterdrunk,date) VALUES(${userID},${glassOfWaterDrunk},'${date}') RETURNING *`
       );
     });
   } catch (e) {

@@ -43,7 +43,7 @@ async function getUserByID(userID) {
 async function getUserWeightByID(userID) {
   try {
     const { rows } = await client.query(
-      `SELECT weight, date FROM usersweight WHERE user_id=${userID}`
+      `SELECT * FROM usersweight WHERE user_id=${userID}`
     );
     return rows[0];
   } catch (e) {
@@ -54,7 +54,7 @@ async function getUserWeightByID(userID) {
 async function getUserWaterConsumptionByID(userID) {
   try {
     const { rows } = await client.query(
-      `SELECT glassofwaterdrunk,date FROM userswaterconsumption WHERE user_id=${userID} `
+      `SELECT * FROM userswaterconsumption WHERE user_id=${userID} `
     );
     return rows[0];
   } catch (e) {
@@ -76,7 +76,7 @@ async function getUserTensionByID(userID) {
 async function getUserExercicesByID(userID) {
   try {
     const { rows } = await client.query(
-      `SELECT exerciceduration,exercicetype,date FROM usersecercices WHERE user_id=${userID} `
+      `SELECT * FROM usersecercices WHERE user_id=${userID} `
     );
     return rows[0];
   } catch (e) {
